@@ -1,0 +1,57 @@
+name: ItemLocker
+version: '1.0.0'
+main: org.turbojax.ItemLocker
+api-version: '1.21'
+
+permissions:
+  itemlocker.help:
+    description: Allows users to use "/itemlocker help"
+    default: true
+  itemlocker.list:
+    description: Allows users to list the locked items, potions, and enchantments.
+    default: true
+    children:
+      - itemlocker.list.items
+      - itemlocker.list.potions
+      - itemlocker.list.enchantments
+  itemlocker.list.items:
+    description: Allows users to list the locked items with "/itemlocker list items".
+    default: true
+  itemlocker.list.potions:
+    description: Allows users to list the locked potions with "/itemlocker list potions".
+    default: true
+  itemlocker.list.enchantments:
+    description: Allows users to list the locked enchantments with "/itemlocker list enchantments".
+    default: true
+  itemlocker.lock:
+    description: Allows users to lock items, potions, and enchantments.
+    default: op
+    children:
+      - itemlocker.lock.item
+      - itemlocker.lock.potion
+      - itemlocker.lock.enchantment
+  itemlocker.lock.item:
+    description: Allows users to lock items with "/itemlocker lock item <item> [amount]".
+    default: op
+  itemlocker.lock.potion:
+    description: Allows users to lock potions with "/itemlocker lock potion <potion> [level] [amount]".
+    default: op
+  itemlocker.lock.enchantment:
+    description: Allows users to lock enchantments with "/itemlocker lock enchantment <enchantment> [level]".
+    default: op
+  itemlocker.unlock:
+    description: Allows users to unlock items, potions, and enchantments.
+    default: op
+    children:
+      - itemlocker.unlock.item
+      - itemlocker.unlock.potion
+      - itemlocker.unlock.enchantment
+  itemlocker.unlock.item:
+    description: Allows users to unlock items with "/itemlocker unlock item <item> [amount]".
+    default: op
+  itemlocker.unlock.potion:
+    description: Allows users to unlock potions with "/itemlocker unlock potion <potion> [level] [amount]".
+    default: op
+  itemlocker.unlock.enchantment:
+    description: Allows users to unlock enchantments with "/itemlocker unlock enchantment <enchantment> [level]".
+    default: op

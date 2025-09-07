@@ -1,0 +1,14 @@
+/il help
+- Shows the help menu for the itemlock command
+
+/il list
+- Lists all lock rules
+
+/il list <Lock implementation>
+- Lists all lock rules of this specific Lock
+
+/il lock <Lock implementation> [args...]
+- Adds a lock of this specified type.  The args are required, but change between implementations.
+
+/il unlock <Lock implementation> [args...]
+- Removes a lock of this specified type.  Any lock that matches the arguments is removed.
