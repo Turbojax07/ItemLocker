@@ -1,0 +1,41 @@
+locks:
+- ==: org.turbojax.locks.ItemLock
+  amount: 1
+  material: minecraft:mace
+- ==: org.turbojax.locks.PotionLock
+  amount: 1
+  level: 2
+  effect: absorption
+  potionType: te
+- ==: org.turbojax.locks.EnchantmentLock
+  level: 3
+  enchantment: minecraft:breach
+- ==: org.turbojax.locks.EnchantmentLock
+  level: 4
+  enchantment: minecraft:density
+- ==: org.turbojax.locks.ItemLock
+  amount: 1
+  material: minecraft:mace
+- ==: org.turbojax.locks.PotionLock
+  amount: 1
+  level: 2
+  effect: absorption
+  potionType: te
+- ==: org.turbojax.locks.EnchantmentLock
+  level: 3
+  enchantment: minecraft:breach
+- ==: org.turbojax.locks.EnchantmentLock
+  level: 4
+  enchantment: minecraft:density
+- EnchantmentLock:
+  level: 4
+  enchantment: minecraft:sharpness
+- EnchantmentLock:
+  level: 4
+  enchantment: minecraft:sharpness
+- EnchantmentLock:
+  level: 4
+  enchantment: minecraft:sharpness
+- EnchantmentLock:
+  level: 4
+  enchantment: minecraft:sharpness

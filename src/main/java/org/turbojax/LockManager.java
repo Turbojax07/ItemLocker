@@ -22,8 +22,8 @@ public class LockManager {
             try {
                 lockFile.createNewFile();
             } catch (IOException err) {
+                // TODO: Implement messages.yml
                 ItemLocker.getInstance().getSLF4JLogger().warn("Could not create locks.yml", err);
-                return;
             }
         }
     }
@@ -35,8 +35,10 @@ public class LockManager {
         try {
             lockConfig.load(lockFile);
         } catch (IOException err) {
+            // TODO: Implement messages.yml
             ItemLocker.getInstance().getSLF4JLogger().warn("Cannot find locks.yml, check folder permissions.", err);
         } catch (InvalidConfigurationException err) {
+            // TODO: Implement messages.yml
             ItemLocker.getInstance().getSLF4JLogger().warn("locks.yml does not have a valid YAML configuration.", err);
         }
     }
@@ -48,6 +50,7 @@ public class LockManager {
         try {
             lockConfig.save(lockFile);
         } catch (IOException err) {
+            // TODO: Implement messages.yml
             ItemLocker.getInstance().getSLF4JLogger().warn("Cannot find locks.yml, check folder permissions.", err);
         }
     }
@@ -96,6 +99,7 @@ public class LockManager {
         try {
             arr = (ArrayList<Lock>) lockConfig.get("locks");
         } catch (ClassCastException err) {
+            // TODO: Implement messages.yml
             ItemLocker.getInstance().getSLF4JLogger().warn("Cannot deserialize the locks.  Check for errors in the config.", err);
         }
 
@@ -109,14 +113,15 @@ public class LockManager {
     /**
      * Removes a lock from the config.
      *
-     * @param lock The lock to remove.
+     * @param toRemove The lock to remove.
      */
-    public static void removeLock(Lock lock) {
+    public static void removeLock(Lock toRemove) {
         // Getting the locks
         List<Lock> locks = getLocks();
 
         // Removing the lock
-        locks.remove(lock);
+        locks.removeIf(lock -> lock.matches(toRemove));
+
 
         // Putting the locks back into the config
         lockConfig.set("locks", locks);

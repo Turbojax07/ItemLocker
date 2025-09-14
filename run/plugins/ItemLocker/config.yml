@@ -1,0 +1,2 @@
+# The amount of time to wait between checks in seconds.
+check-interval: 20
