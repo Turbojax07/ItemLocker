@@ -2,14 +2,11 @@ package org.turbojax;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.turbojax.locks.Lock;
 
@@ -17,46 +14,42 @@ public class LockManager {
     private static final File lockFile = new File("plugins/ItemLocker/locks.yml");
     private static final FileConfiguration lockConfig = new YamlConfiguration();
 
-    /** Reads data from the lock file. */
-    public static void loadLocks() {
-        // Creating the config file if it doesn't exist
+    public static void createLockFile() {
+        // Creating the lock file if it doesn't exist
         if (!lockFile.exists()) {
-            lockFile.mkdirs();
+            lockFile.getParentFile().mkdirs();
 
             try {
                 lockFile.createNewFile();
             } catch (IOException err) {
-                ItemLocker.getInstance().getSLF4JLogger().warn("Could not create config.yml", err);
+                ItemLocker.getInstance().getSLF4JLogger().warn("Could not create locks.yml", err);
                 return;
             }
         }
+    }
+    /** Reads locks from the lock file. */
+    public static void loadLocks() {
+        createLockFile();
 
         // Loading data from the config
         try {
             lockConfig.load(lockFile);
         } catch (IOException err) {
-            ItemLocker.getInstance().getSLF4JLogger().warn("Cannot find config.yml, check folder permissions.", err);
+            ItemLocker.getInstance().getSLF4JLogger().warn("Cannot find locks.yml, check folder permissions.", err);
         } catch (InvalidConfigurationException err) {
-            ItemLocker.getInstance().getSLF4JLogger().warn("config.yml does not have a valid YAML configuration.", err);
+            ItemLocker.getInstance().getSLF4JLogger().warn("locks.yml does not have a valid YAML configuration.", err);
         }
     }
 
-    /** Writes data to the config file. */
+    /** Writes locks to the lock file. */
     public static void saveLocks() {
-        // Creating the config file if it doesn't exist
-        if (!lockFile.exists()) {
-            lockFile.mkdirs();
-
-            try {
-                lockFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        createLockFile();
 
         try {
             lockConfig.save(lockFile);
-        } catch (IOException e) {}
+        } catch (IOException err) {
+            ItemLocker.getInstance().getSLF4JLogger().warn("Cannot find locks.yml, check folder permissions.", err);
+        }
     }
 
     /**
@@ -64,7 +57,7 @@ public class LockManager {
      *
      * @param lock The new lock to add.
      */
-    public static void lock(Lock lock) {
+    public static void addLock(Lock lock) {
         // Getting the locks
         List<Lock> locks = getLocks();
 
@@ -74,7 +67,7 @@ public class LockManager {
         // Putting the locks back into the config
         lockConfig.set("locks", locks);
 
-        // Writing the config to disk
+        // Writing the locks to disk
         saveLocks();
     }
 
@@ -86,9 +79,9 @@ public class LockManager {
      * @return All the locks of type clazz.
      */
     @NotNull
-    public static List<? extends Lock> getLocks(Class<? extends Lock> clazz) {
+    public static <T extends Lock> List<T> getLocks(Class<T> clazz) {
         // Filtering the locks
-        return getLocks().stream().filter(clazz::isInstance).toList();
+        return getLocks().stream().filter(clazz::isInstance).map(clazz::cast).toList();
     }
 
     /**
@@ -118,7 +111,7 @@ public class LockManager {
      *
      * @param lock The lock to remove.
      */
-    public static void unlock(Lock lock) {
+    public static void removeLock(Lock lock) {
         // Getting the locks
         List<Lock> locks = getLocks();
 
@@ -128,41 +121,7 @@ public class LockManager {
         // Putting the locks back into the config
         lockConfig.set("locks", locks);
 
-        // Writing the config to disk
+        // Writing the locks to disk
         saveLocks();
-    }
-
-    /**
-     * Registers a new lock with the plugin.
-     *
-     * @param lock The lock class to register.
-     */
-    public static void registerLock(Class<? extends Lock> lock) {
-        try {
-            Bukkit.getPluginManager().registerEvents(lock.getConstructor().newInstance(), ItemLocker.getInstance());
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException err) {
-            // Ignore registering this lock because it doesn't meet the requirements.
-            ItemLocker.getInstance().getSLF4JLogger().warn("Cannot load Lock \"" + lock.getClass().getSimpleName() + "\": Cannot find and/or invoke a public default constructor.", err);
-        }
-    }
-
-    /**
-     * Unregisters a lock.
-     *
-     * @param lock The lock class to unregister.
-     */
-    public static void unregisterLock(Class<? extends Lock> lock) {
-        try {
-            HandlerList.unregisterAll(lock.getConstructor().newInstance());
-        } catch (InstantiationException e) {
-            // TODO: Implement better
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
