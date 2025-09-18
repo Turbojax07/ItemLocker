@@ -1,11 +1,8 @@
-/il help
-- Shows the help menu for the itemlock command
+/il help [Lock implementation]
+- Shows the help menu.  If the [Lock implementation] is defined, it prints a help menu specific to that implementation.
 
-/il list
-- Lists all lock rules
-
-/il list <Lock implementation>
-- Lists all lock rules of this specific Lock
+/il list [Lock implementation]
+- Lists all lock rules.  If the [Lock implementation] is defined, it only lists the locks from that implementation.
 
 /il lock <Lock implementation> [args...]
 - Adds a lock of this specified type.  The args are required, but change between implementations.
